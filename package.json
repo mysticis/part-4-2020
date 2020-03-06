@@ -4,11 +4,14 @@
   "description": "A bloglist application backend",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest --verbose"
   },
   "author": "Joe Martin",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^25.1.0",
     "nodemon": "^2.0.2"
   },
   "dependencies": {
