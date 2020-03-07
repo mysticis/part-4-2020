@@ -5,6 +5,6 @@ const blogWithMostLikes = blogs => {
       likes = blog.likes
     }
   }
-  return blogs.filter(blog => blog.likes === likes)
+  return blogs.filter(blog => blog.likes === likes)[0]
 }
 module.exports = blogWithMostLikes

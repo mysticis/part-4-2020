@@ -13,15 +13,13 @@ describe("total likes", () => {
     expect(totalLikes(blogs)).toBe(36)
   })
   test("should return blog with highest number of likes", () => {
-    expect(blogWithMostLikes(blogs)).toEqual([
-      {
-        _id: "5a422b3a1b54a676234d17f9",
-        title: "Canonical string reduction",
-        author: "Edsger W. Dijkstra",
-        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-        likes: 12,
-        __v: 0
-      }
-    ])
+    expect(blogWithMostLikes(blogs)).toEqual({
+      _id: "5a422b3a1b54a676234d17f9",
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes: 12,
+      __v: 0
+    })
   })
 })
