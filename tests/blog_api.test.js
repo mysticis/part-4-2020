@@ -21,4 +21,12 @@ test("should return the right amount of blogposts in json format", async () => {
     .expect("Content-Type", /application\/json/)
   expect(helper.length).toBe(response.body.length)
 })
+
+test("should verify the unique property of returned blogs exist", async () => {
+  const response = await api.get("/api/blogs")
+  for (let blog of response.body) {
+    expect(blog.id).toBeDefined()
+  }
+})
+
 afterAll(() => mongoose.connection.close())
