@@ -2,13 +2,14 @@ const list_helper = require("../utils/list_helper")
 const blogs = require("../blogList")
 const totalLikes = require("../utils/totalLikes")
 const blogWithMostLikes = require("../utils/blogWithMostLikes")
+const mostBlogs = require("../utils/mostBlogs")
 test("should return one", () => {
   const blogs = []
   const result = list_helper.dummy(blogs)
   expect(result).toBe(1)
 })
 
-describe("total likes", () => {
+describe("the following tests", () => {
   test("should return total number of likes", () => {
     expect(totalLikes(blogs)).toBe(36)
   })
@@ -21,5 +22,8 @@ describe("total likes", () => {
       likes: 12,
       __v: 0
     })
+  })
+  test("should return author with most blogs", () => {
+    expect(mostBlogs(blogs)).toEqual({ author: "Robert C. Martin", blogs: 3 })
   })
 })
