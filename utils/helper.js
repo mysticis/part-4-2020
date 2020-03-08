@@ -1,3 +1,11 @@
-const blogs = require("../blogList")
+const blogModel = require("../models/blog")
+const initialBlogList = require("../blogList")
+const blogsInDatabase = async () => {
+  const blogs = await blogModel.find({})
+  return blogs.map(blog => blog.toJSON())
+}
 
-module.exports = blogs
+module.exports = {
+  blogsInDatabase,
+  initialBlogList
+}

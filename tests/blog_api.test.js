@@ -8,7 +8,7 @@ const helper = require("../utils/helper")
 
 beforeEach(async () => {
   await Blogs.deleteMany({})
-  const blogToSave = helper.map(blog => new Blogs(blog))
+  const blogToSave = helper.initialBlogList.map(blog => new Blogs(blog))
   const promiseArray = blogToSave.map(blog => blog.save())
   await Promise.all(promiseArray)
 })
@@ -19,7 +19,7 @@ test("should return the right amount of blogposts in json format", async () => {
     .get("/api/blogs")
     .expect(200)
     .expect("Content-Type", /application\/json/)
-  expect(helper.length).toBe(response.body.length)
+  expect(helper.initialBlogList.length).toBe(response.body.length)
 })
 
 test("should verify the unique property of returned blogs exist", async () => {
@@ -27,6 +27,25 @@ test("should verify the unique property of returned blogs exist", async () => {
   for (let blog of response.body) {
     expect(blog.id).toBeDefined()
   }
+})
+
+test("should verify that a new blog can be created", async () => {
+  const newBlog = {
+    title: "testTitle1",
+    author: "testAuthor1",
+    url: "testurl",
+    likes: 7
+  }
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+  const response = await api.get("/api/blogs")
+  const blogsInDB = await helper.blogsInDatabase()
+  const authors = blogsInDB.map(blog => blog.author)
+  expect(response.body.length).toBe(helper.initialBlogList.length + 1)
+  expect(authors).toContain("testAuthor1")
 })
 
 afterAll(() => mongoose.connection.close())
