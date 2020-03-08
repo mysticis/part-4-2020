@@ -47,5 +47,32 @@ test("should verify that a new blog can be created", async () => {
   expect(response.body.length).toBe(helper.initialBlogList.length + 1)
   expect(authors).toContain("testAuthor1")
 })
+test("should verify that a blog without likes property default to 0", async () => {
+  const blogWithoutLikes = {
+    title: "testAuthor2",
+    author: "testAuthor2",
+    url: "testurl2"
+  }
+  if (!blogWithoutLikes.hasOwnProperty("likes")) {
+    blogWithoutLikes.likes = 0
+  }
+  await api
+    .post("/api/blogs")
+    .send(blogWithoutLikes)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+
+  const initialBlogList = await helper.initialBlogList
+  const blogsInDatabase = await helper.blogsInDatabase()
+  const response = await api.get("/api/blogs")
+  expect(response.body.length).toBe(initialBlogList.length + 1)
+  expect(blogsInDatabase[blogsInDatabase.length - 1]).toEqual({
+    title: "testAuthor2",
+    author: "testAuthor2",
+    url: "testurl2",
+    likes: 0,
+    id: blogsInDatabase[blogsInDatabase.length - 1].id
+  })
+})
 
 afterAll(() => mongoose.connection.close())
