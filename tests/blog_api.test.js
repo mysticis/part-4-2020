@@ -83,5 +83,14 @@ test("should return a 400 status code if title and url are missing", async () =>
   const blogsInDatabase = await helper.blogsInDatabase()
   expect(blogsInDatabase.length).toBe(helper.initialBlogList.length)
 })
+test("should succesfully delete a blog post", async () => {
+  const blogsInDatabase = await helper.blogsInDatabase()
+  const blogTODel = blogsInDatabase[0]
+  await api.delete(`/api/blogs/${blogTODel.id}`).expect(204)
+  const blogsAfterDeletion = await helper.blogsInDatabase()
+  expect(blogsAfterDeletion.length).toBe(helper.initialBlogList.length - 1)
+  const blogTitles = blogsAfterDeletion.map(blog => blog.title)
+  expect(blogTitles).not.toContain(blogTODel.title)
+})
 
 afterAll(() => mongoose.connection.close())
