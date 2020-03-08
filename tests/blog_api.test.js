@@ -29,7 +29,7 @@ test("should verify the unique property of returned blogs exist", async () => {
   }
 })
 
-test("should verify that a new blog can be created", async () => {
+test("should verify that a valid blog can be created", async () => {
   const newBlog = {
     title: "testTitle1",
     author: "testAuthor1",
@@ -53,9 +53,6 @@ test("should verify that a blog without likes property default to 0", async () =
     author: "testAuthor2",
     url: "testurl2"
   }
-  if (!blogWithoutLikes.hasOwnProperty("likes")) {
-    blogWithoutLikes.likes = 0
-  }
   await api
     .post("/api/blogs")
     .send(blogWithoutLikes)
@@ -68,11 +65,23 @@ test("should verify that a blog without likes property default to 0", async () =
   expect(response.body.length).toBe(initialBlogList.length + 1)
   expect(blogsInDatabase[blogsInDatabase.length - 1]).toEqual({
     title: "testAuthor2",
+    id: blogsInDatabase[blogsInDatabase.length - 1].id,
     author: "testAuthor2",
     url: "testurl2",
-    likes: 0,
-    id: blogsInDatabase[blogsInDatabase.length - 1].id
+    likes: 0
   })
+})
+test("should return a 400 status code if title and url are missing", async () => {
+  const blogWOutTitleUrl = {
+    author: "invalidBlogAuthor",
+    likes: 12
+  }
+  await api
+    .post("/api/blogs")
+    .send(blogWOutTitleUrl)
+    .expect(400)
+  const blogsInDatabase = await helper.blogsInDatabase()
+  expect(blogsInDatabase.length).toBe(helper.initialBlogList.length)
 })
 
 afterAll(() => mongoose.connection.close())
